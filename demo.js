@@ -17,7 +17,7 @@ function setup(game, avatar) {
   hl.on('highlight-adjacent', function (voxelPos) { blockPosPlace = voxelPos })
   hl.on('remove-adjacent', function (voxelPos) { blockPosPlace = null })
   hl.on('highlight-deselect', function(pos) {
-    select.set(pos.start, pos.end)
+    select.set(pos.start, pos.end, false)
   })
 
   var shiftDown = false
