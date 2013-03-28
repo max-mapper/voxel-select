@@ -1,0 +1,23 @@
+{
+  "name": "voxel-select",
+  "description": "select a group of voxels",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:maxogden/voxel-select.git"
+  },
+  "dependencies": {
+    "inherits": "1.0.0"
+  },
+  "devDependencies": {
+    "voxel-engine": "~0.15.0",
+    "beefy": "0.0.11",
+    "painterly-textures": "0.0.3",
+    "browserify": "~2.10.0",
+    "voxel-highlight": "0.0.9",
+    "voxel-player": "~0.1.0"
+  },
+  "scripts": {
+    "start": "beefy demo.js"
+  }
+}
