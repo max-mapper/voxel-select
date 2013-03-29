@@ -7,6 +7,14 @@ var game = require('voxel-hello-world')({
   generate: function hill(x, y, z) {
     return y <= 16 * Math.exp(-(x*x + z*z) / 64) ? 1 : 0
   },
+  materials: [
+    ['grass', 'dirt', 'grass_dirt'],
+    'obsidian',
+    'brick',
+    'grass',
+    'plank',
+    'whitewool'
+  ],
   chunkDistance: 1,
   texturePath: textures,
   playerSkin: textures + 'player.png'
@@ -30,8 +38,11 @@ function setup(game, avatar) {
     select.reset()
     select.set(pos.start, pos.end, true)
     var bounds = select.bounds()
-    transforms.walls(game, bounds[0], bounds[1], 2)
-    // select.transform(transforms.overlay(2))
+    switch (dropdown.value) {
+      case 'overlay': return select.transform(transforms.overlay(6))
+      case 'walls': return transforms.walls(game, bounds[0], bounds[1], 3)
+      case 'nothing': return
+    }
   })
 
   var shiftDown = false
@@ -44,6 +55,8 @@ function setup(game, avatar) {
   window.addEventListener('keyup', function (ev) {
     if (ev.keyCode === 16) shiftDown = false
   })
+  
+  var dropdown = document.querySelector('select')
   
   game.on('fire', function (target, state) {
     var select = game.controls.state.select
