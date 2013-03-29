@@ -4,8 +4,22 @@ var createSelect = require('./')
 var fly = require('voxel-fly')
 var transforms = require('voxel-transforms')
 var game = require('voxel-hello-world')({
-  generate: function hill(x, y, z) {
-    return y <= 16 * Math.exp(-(x*x + z*z) / 64) ? 1 : 0
+  generate: function(i,j,k) {
+    var h0 = 3.0 * Math.sin(Math.PI * i / 12.0 - Math.PI * k * 0.1) + 27;    
+    if(j > h0+1) {
+      return 0;
+    }
+    if(h0 <= j) {
+      return 1;
+    }
+    var h1 = 2.0 * Math.sin(Math.PI * i * 0.25 - Math.PI * k * 0.3) + 20;
+    if(h1 <= j) {
+      return 2;
+    }
+    if(2 < j) {
+      return Math.random() < 0.1 ? 0x222222 : 0xaaaaaa;
+    }
+    return 3;
   },
   materials: [
     ['grass', 'dirt', 'grass_dirt'],
@@ -15,7 +29,7 @@ var game = require('voxel-hello-world')({
     'plank',
     'whitewool'
   ],
-  chunkDistance: 1,
+  chunkDistance: 4,
   texturePath: textures,
   playerSkin: textures + 'player.png'
 }, setup)
@@ -24,7 +38,8 @@ var makeFly = fly(game)
 makeFly(game.controls.target())
 
 function setup(game, avatar) {
-  avatar.position.copy({x: 9, y: 2, z: 19})
+  avatar.position.copy({x: 9, y: 30, z: 19})
+
   var select = createSelect(game)
   window.sel = select
 
@@ -41,6 +56,7 @@ function setup(game, avatar) {
     switch (dropdown.value) {
       case 'overlay': return select.transform(transforms.overlay(6))
       case 'walls': return transforms.walls(game, bounds[0], bounds[1], 3)
+      case 'erase': return select.transform(transforms.erase)
       case 'nothing': return
     }
   })
