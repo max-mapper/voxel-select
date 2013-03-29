@@ -14,7 +14,7 @@ function Selector(game, opts) {
 inherits(Selector, events.EventEmitter)
 
 Selector.prototype.set = function(start, end, visible) {
-  if (!visible) visible = true
+  if (typeof visible === 'undefined') visible = true
   var THREE = this.game.THREE
   // draw box up 1 voxel
   start[1]++
@@ -27,8 +27,6 @@ Selector.prototype.set = function(start, end, visible) {
   var d = dimensions[2]
 
   if (visible) {
-    this.game.addMarker({x: start[0], y: start[1], z: start[2]})
-    this.game.addMarker({x: end[0], y: end[1], z: end[2]})
     var cube = new THREE.CubeGeometry(w, h, d)
     var material = new game.THREE.MeshBasicMaterial({
       color: 0xffaa00,
@@ -43,32 +41,41 @@ Selector.prototype.set = function(start, end, visible) {
   }
 }
 
-Selector.prototype.dimensions = function(start, end) {
-  if (!start) start = this.start
-  if (!end) end = this.end
-  var w = end[0] >= start[0] ? end[0] - start[0] : start[0] - end[0]
-  var h = end[1] >= start[1] ? end[1] - start[1] : start[1] - end[1]
-  var d = end[2] >= start[2] ? end[2] - start[2] : start[2] - end[2]
+Selector.prototype.dimensions = function(s, e) {
+  if (!s) s = this.start
+  if (!e) e = this.end
+  // var w = e[0] >= s[0] ? e[0] - s[0] : s[0] - e[0]
+  // var h = e[1] >= s[1] ? e[1] - s[1] : s[1] - e[1]
+  // var d = e[2] >= s[2] ? e[2] - s[2] : s[2] - e[2]
+  var w = e[0] - s[0]
+  var h = e[1] - s[1]
+  var d = e[2] - s[2]
   return [w, h, d]
 }
 
 Selector.prototype.transform = function(func) {
-  var l = this.start
-  var h = this.end
+  var s = this.start
+  var e = this.end
+  var l = [], h = []
+  if (s[0] < e[0]) l[0] = s[0], h[0] = e[0]
+  else l[0] = e[0], h[0] = s[0]
+  if (s[1] < e[1]) l[1] = s[1], h[1] = e[1]
+  else l[1] = e[1], h[1] = s[1]
+  if (s[2] < e[2]) l[2] = s[2], h[2] = e[2]
+  else l[2] = e[2], h[2] = s[2]
   var n = 0
-  for(var z=l[2]; z<h[2]; ++z)
-    for(var y=l[1]; y<h[1]; ++y)
-      for(var x=l[0]; x<h[0]; ++x, ++n)
-        func(x, y, z, n)
+  for(var z = l[2]; z < h[2]; ++z)
+    for(var y = l[1]; y < h[1]; ++y)
+      for(var x = l[0]; x < h[0]; ++x, ++n) func(x, y, z, n)
 }
 
 Selector.prototype.selection = function() {
   var d = this.dimensions()
-  var v = new Int8Array(d[0]*d[1]*d[2])
+  var v = new Int8Array(d[0] * d[1] * d[2])
   this.transform(function(x, y, z, n) {
     v[n] = this.game.getBlock(x, y, z)
   })
-  return {voxels:v, dimensions:d, start: this.start}
+  return {voxels: v, dimensions: d, start: this.start}
 }
 
 Selector.prototype.reset = function() {
