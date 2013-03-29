@@ -18,14 +18,7 @@ Selector.prototype.set = function(start, end, visible) {
   var THREE = this.game.THREE
   this.start = start
   this.end = end
-  var dimensions = this.dimensions(start, end)
-  var w = dimensions[0]
-  var h = dimensions[1]
-  var d = dimensions[2]
-
-  if (visible) {
-    this.drawMesh(this.start, this.end)
-  }
+  if (visible) this.drawMesh(this.start, this.end)
 }
 
 Selector.prototype.drawMesh = function(start, end) {
@@ -68,15 +61,15 @@ Selector.prototype.dimensions = function() {
   var w = bounds[1][0] - bounds[0][0]
   var h = bounds[1][1] - bounds[0][1]
   var d = bounds[1][2] - bounds[0][2]
-  return [w, h, d]
+  return [w + 1, h + 1, d + 1]
 }
 
 Selector.prototype.transform = function(func) {
   var bounds = this.bounds()
   var l = bounds[0], h = bounds[1]
-  for(var z = h[2]; z > l[2]; --z)
-    for(var y = h[1]; y > l[1]; --y)
-      for(var x = h[0]; x > l[0]; --x)
+  for(var z = h[2]; z >= l[2]; --z)
+    for(var y = h[1]; y >= l[1]; --y)
+      for(var x = h[0]; x >= l[0]; --x)
         func(x, y, z, this.game)
 }
 
