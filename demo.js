@@ -11,6 +11,8 @@ var game = require('voxel-hello-world')({
 }, setup)
 
 function setup(game, avatar) {
+  avatar.position.copy({x: 9, y: 2, z: 19})
+  
   var select = createSelect(game)
   window.sel = select
 
