@@ -65,20 +65,19 @@ Selector.prototype.bounds = function() {
 
 Selector.prototype.dimensions = function() {
   var bounds = this.bounds()
-  var w = bounds[0][0] - bounds[1][0]
-  var h = bounds[0][1] - bounds[1][1]
-  var d = bounds[0][2] - bounds[1][2]
+  var w = bounds[1][0] - bounds[0][0]
+  var h = bounds[1][1] - bounds[0][1]
+  var d = bounds[1][2] - bounds[0][2]
   return [w, h, d]
 }
 
 Selector.prototype.transform = function(func) {
   var bounds = this.bounds()
   var l = bounds[0], h = bounds[1]
-  var n = 0
   for(var z = h[2]; z > l[2]; --z)
     for(var y = h[1]; y > l[1]; --y)
       for(var x = h[0]; x > l[0]; --x)
-        func(x, y, z, n, this.game)
+        func(x, y, z, this.game)
 }
 
 Selector.prototype.selection = function() {
