@@ -1,6 +1,8 @@
 var textures = "http://commondatastorage.googleapis.com/voxeltextures/"
 var highlight = require('voxel-highlight')
 var createSelect = require('./')
+var fly = require('voxel-fly')
+var transforms = require('voxel-transforms')
 var game = require('voxel-hello-world')({
   generate: function hill(x, y, z) {
     return y <= 16 * Math.exp(-(x*x + z*z) / 64) ? 1 : 0
@@ -9,6 +11,9 @@ var game = require('voxel-hello-world')({
   texturePath: textures,
   playerSkin: textures + 'player.png'
 }, setup)
+
+var makeFly = fly(game)
+makeFly(game.controls.target())
 
 function setup(game, avatar) {
   avatar.position.copy({x: 9, y: 2, z: 19})
@@ -24,6 +29,9 @@ function setup(game, avatar) {
   hl.on('highlight-deselect', function(pos) {
     select.reset()
     select.set(pos.start, pos.end, true)
+    var bounds = select.bounds()
+    transforms.walls(game, bounds[0], bounds[1], 2)
+    // select.transform(transforms.overlay(2))
   })
 
   var shiftDown = false

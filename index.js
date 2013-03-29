@@ -41,32 +41,31 @@ Selector.prototype.set = function(start, end, visible) {
   }
 }
 
-Selector.prototype.dimensions = function(s, e) {
-  if (!s) s = this.start
-  if (!e) e = this.end
-  // var w = e[0] >= s[0] ? e[0] - s[0] : s[0] - e[0]
-  // var h = e[1] >= s[1] ? e[1] - s[1] : s[1] - e[1]
-  // var d = e[2] >= s[2] ? e[2] - s[2] : s[2] - e[2]
-  var w = e[0] - s[0]
-  var h = e[1] - s[1]
-  var d = e[2] - s[2]
+Selector.prototype.bounds = function() {
+  var s = this.start
+  var e = this.end
+  return [
+    [Math.min(s[0], e[0]), Math.min(s[1], e[1]), Math.min(s[2], e[2])],
+    [Math.max(s[0], e[0]), Math.max(s[1], e[1]), Math.max(s[2], e[2])],
+  ]
+}
+
+Selector.prototype.dimensions = function() {
+  var bounds = this.bounds()
+  var w = bounds[0][0] - bounds[1][0]
+  var h = bounds[0][1] - bounds[1][1]
+  var d = bounds[0][2] - bounds[1][2]
   return [w, h, d]
 }
 
 Selector.prototype.transform = function(func) {
-  var s = this.start
-  var e = this.end
-  var l = [], h = []
-  if (s[0] < e[0]) l[0] = s[0], h[0] = e[0]
-  else l[0] = e[0], h[0] = s[0]
-  if (s[1] < e[1]) l[1] = s[1], h[1] = e[1]
-  else l[1] = e[1], h[1] = s[1]
-  if (s[2] < e[2]) l[2] = s[2], h[2] = e[2]
-  else l[2] = e[2], h[2] = s[2]
+  var bounds = this.bounds()
+  var l = bounds[0], h = bounds[1]
   var n = 0
-  for(var z = l[2]; z < h[2]; ++z)
-    for(var y = l[1]; y < h[1]; ++y)
-      for(var x = l[0]; x < h[0]; ++x, ++n) func(x, y, z, n)
+  for(var z = h[2]; z > l[2]; --z)
+    for(var y = h[1]; y > l[1]; --y)
+      for(var x = h[0]; x > l[0]; --x)
+        func(x, y, z, n, this.game)
 }
 
 Selector.prototype.selection = function() {
