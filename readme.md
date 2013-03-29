@@ -24,9 +24,25 @@ select.set(start, end) // bounding box positions
 
 returns an initialization function that you must pass your game object into in order to get a selector instance
 
-### selector.set(start, end)
+### selector.set(start, end, visible)
 
-more docs soon
+sets the selection. `start` and `end` should be [x, y, z] vectors. `visible` is by default true and controls whether or not to draw a selection wireframe
+
+### selector.dimensions()
+
+returns absolute [width, height, depth] of the current selection
+
+### selector.transform(function(x, y, z, idx) {})
+
+run a function over each voxel in the current selection. `idx` is the voxel interchange format array index
+
+### selector.selection()
+
+returns data in the [voxel interchange format](https://github.com/maxogden/voxel-engine)
+
+### selector.reset()
+
+clears the current selection and removes the wireframe if present
 
 ## license
 

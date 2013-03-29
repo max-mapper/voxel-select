@@ -2,6 +2,10 @@ var textures = "http://commondatastorage.googleapis.com/voxeltextures/"
 var highlight = require('voxel-highlight')
 var createSelect = require('./')
 var game = require('voxel-hello-world')({
+  generate: function hill(x, y, z) {
+    return y <= 16 * Math.exp(-(x*x + z*z) / 64) ? 1 : 0
+  },
+  chunkDistance: 1,
   texturePath: textures,
   playerSkin: textures + 'player.png'
 }, setup)
@@ -17,7 +21,8 @@ function setup(game, avatar) {
   hl.on('highlight-adjacent', function (voxelPos) { blockPosPlace = voxelPos })
   hl.on('remove-adjacent', function (voxelPos) { blockPosPlace = null })
   hl.on('highlight-deselect', function(pos) {
-    select.set(pos.start, pos.end)
+    select.reset()
+    select.set(pos.start, pos.end, true)
   })
 
   var shiftDown = false
