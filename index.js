@@ -16,9 +16,6 @@ inherits(Selector, events.EventEmitter)
 Selector.prototype.set = function(start, end, visible) {
   if (typeof visible === 'undefined') visible = true
   var THREE = this.game.THREE
-  // draw box up 1 voxel
-  start[1]++
-  end[1]++
   this.start = start
   this.end = end
   var dimensions = this.dimensions(start, end)
@@ -27,18 +24,34 @@ Selector.prototype.set = function(start, end, visible) {
   var d = dimensions[2]
 
   if (visible) {
-    var cube = new THREE.CubeGeometry(w, h, d)
-    var material = new game.THREE.MeshBasicMaterial({
-      color: 0xffaa00,
-      wireframe: true,
-      wireframeLinewidth: 2
-    })
-    this.mesh = new THREE.Mesh( cube, material )
-    var startV = new THREE.Vector3(start[0], start[1], start[2])
-    var endV = new THREE.Vector3(end[0], end[1], end[2])
-    this.mesh.position.copy(startV.lerp(endV, 0.5))
-    this.game.scene.add(this.mesh)
+    this.drawMesh(this.start, this.end)
   }
+}
+
+Selector.prototype.drawMesh = function(start, end) {
+  var THREE = this.game.THREE
+  var cube = new THREE.CubeGeometry(1, 1, 1)
+  var material = new game.THREE.MeshBasicMaterial({
+    color: 0xffaa00,
+    wireframe: true,
+    wireframeLinewidth: 2
+  })
+  var mesh = new THREE.Mesh( cube, material )
+  
+  var scale = []
+  scale[0] = Math.abs(end[0] - start[0]) + 1
+  scale[1] = Math.abs(end[1] - start[1]) + 1
+  scale[2] = Math.abs(end[2] - start[2]) + 1
+  mesh.scale.set(scale[0], scale[1], scale[2])
+
+  var pos = []
+  pos[0] = this.start[0] + 0.5 + (this.end[0] - this.start[0]) / 2
+  pos[1] = this.start[1] + 0.5 + (this.end[1] - this.start[1]) / 2
+  pos[2] = this.start[2] + 0.5 + (this.end[2] - this.start[2]) / 2
+  mesh.position.set(pos[0], pos[1], pos[2])
+
+  this.game.scene.add(mesh)
+  this.mesh = mesh
 }
 
 Selector.prototype.bounds = function() {
