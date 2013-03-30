@@ -29,7 +29,7 @@ var game = require('voxel-hello-world')({
     'plank',
     'whitewool'
   ],
-  chunkDistance: 4,
+  chunkDistance: 1,
   texturePath: textures,
   playerSkin: textures + 'player.png'
 }, setup)
@@ -57,6 +57,7 @@ function setup(game, avatar) {
       case 'overlay': return select.transform(transforms.overlay(6))
       case 'walls': return transforms.walls(game, bounds[0], bounds[1], 3)
       case 'erase': return select.transform(transforms.erase)
+      case 'move': return transforms.move(game, bounds[0], bounds[1], [0, 5, 0])
       case 'nothing': return
     }
   })

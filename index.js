@@ -67,10 +67,11 @@ Selector.prototype.dimensions = function() {
 Selector.prototype.transform = function(func) {
   var bounds = this.bounds()
   var l = bounds[0], h = bounds[1]
-  for(var z = h[2]; z >= l[2]; --z)
-    for(var y = h[1]; y >= l[1]; --y)
-      for(var x = h[0]; x >= l[0]; --x)
+  for(var z = l[2]; z <= h[2]; ++z)
+    for(var y = l[1]; y <= h[1]; ++y)
+      for(var x = l[0]; x <= h[0]; ++x)
         func(x, y, z, this.game)
+  func(false, false, false, this.game)
 }
 
 Selector.prototype.selection = function() {
