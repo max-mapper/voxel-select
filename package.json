@@ -9,7 +9,7 @@
   "dependencies": {
     "inherits": "1.0.0",
     "gl-matrix": "~2.0.0",
-    "voxel-transforms": "0.2.0"
+    "voxel-transforms": "~0.3.0"
   },
   "devDependencies": {
     "beefy": "0.0.11",
