@@ -58,6 +58,8 @@ function setup(game, avatar) {
       case 'walls': return transforms.walls(game, bounds[0], bounds[1], 3)
       case 'erase': return select.transform(transforms.erase)
       case 'move': return transforms.move(game, bounds[0], bounds[1], [0, 5, 0])
+      case 'replace': return select.transform(transforms.replace(3, 1))
+      case 'fill': return select.transform(transforms.replace(1, 0))
       case 'nothing': return
     }
   })
