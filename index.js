@@ -24,7 +24,7 @@ Selector.prototype.set = function(start, end, visible) {
 Selector.prototype.drawMesh = function(start, end) {
   var THREE = this.game.THREE
   var cube = new THREE.CubeGeometry(1, 1, 1)
-  var material = new game.THREE.MeshBasicMaterial({
+  var material = new THREE.MeshBasicMaterial({
     color: 0xffaa00,
     wireframe: true,
     wireframeLinewidth: 2
@@ -75,10 +75,11 @@ Selector.prototype.transform = function(func) {
 }
 
 Selector.prototype.selection = function() {
+  var self = this
   var d = this.dimensions()
   var v = new Int8Array(d[0] * d[1] * d[2])
   this.transform(function(x, y, z, n) {
-    v[n] = this.game.getBlock(x, y, z)
+    v[n] = self.game.getBlock([x, y, z])
   })
   return {voxels: v, dimensions: d, start: this.start}
 }
